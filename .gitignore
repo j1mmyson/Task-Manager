@@ -1,0 +1,5 @@
+# config
+.env
+
+# executable files
+localserver
