@@ -11,7 +11,12 @@ func main() {
 
 	models.ConnectDB()
 
+	r.LoadHTMLGlob("web/templates/*")
+
+	r.GET("/", controller.IndexPage)
 	r.GET("/lists", controller.AllLists)
 	r.POST("/lists", controller.CreateList)
+	r.GET("/lists/:user", controller.FindListByUserName)
+	r.POST("/lists/delete/:id", controller.DeleteListById)
 	r.Run()
 }

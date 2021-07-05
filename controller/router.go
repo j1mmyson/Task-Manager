@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,18 +27,15 @@ func AllLists(c *gin.Context) {
 // POST /lists
 // Create List
 func CreateList(c *gin.Context) {
-	fmt.Println(c.ContentType())
 	var input CreateListInput
 
 	switch c.ContentType() {
 	case "multipart/form-data":
-		fmt.Println("ContentType : form data")
 		if err := c.ShouldBind(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 	case "application/json":
-		fmt.Println("ContentType: json")
 		if err := c.ShouldBindJSON(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error:": err.Error()})
 			return
@@ -53,8 +49,35 @@ func CreateList(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": list})
 }
 
-func DeleteList(c *gin.Context) {
+// GET /lists/:user
+// Get lists by user_name
+func FindListByUserName(c *gin.Context) {
+	var lists []models.List
 
+	if err := models.DB.Where("user = ?", c.Param("user")).Find(&lists).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found!"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": lists})
+}
+
+// POST /lists/delete/:id
+func DeleteListById(c *gin.Context) {
+	var list models.List
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&list).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found!"})
+		return
+	}
+
+	models.DB.Delete(&list)
+	c.JSON(http.StatusOK, gin.H{"data": true})
+}
+
+func IndexPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title": "Index Pagez",
+	})
 }
 
 func LogIn(c *gin.Context) {
