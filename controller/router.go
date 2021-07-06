@@ -8,10 +8,12 @@ import (
 )
 
 type CreateListInput struct {
-	User    string `form:"user" json:"user"`
-	Title   string `form:"title" json:"title"`
-	State   string `form:"state" json:"state"`
-	Content string `form:"content" json:"content"`
+	ID      uint        `json:"id" gorm:"primary_key"`
+	UserID  string      `json:"user_id" gorm:"size:191"`
+	Title   string      `json:"title"`
+	State   string      `json:"state"`
+	Content string      `json:"content"`
+	User    models.User `gorm:"foreignKey:UserID"`
 }
 
 // GET /lists
@@ -43,7 +45,7 @@ func CreateList(c *gin.Context) {
 	}
 
 	// Create list
-	list := models.List{User: input.User, Title: input.Title, State: input.State, Content: input.Content}
+	list := models.List{UserID: input.UserID, Title: input.Title, State: input.State, Content: input.Content}
 	models.DB.Create(&list)
 
 	c.JSON(http.StatusOK, gin.H{"data": list})
@@ -74,16 +76,34 @@ func DeleteListById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": true})
 }
 
-func IndexPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "Index Pagez",
-	})
+// GET /
+// Login Page
+func LogInPage(c *gin.Context) {
+	if isAleadyLogIn() {
+		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
+		c.Redirect(http.StatusSeeOther, "/")
+	}
+	c.HTML(http.StatusOK, "login.html", nil)
 }
 
-func LogIn(c *gin.Context) {
+// GET /signup
+// SignUp Page
+func SignUpPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "signup.html", nil)
+}
 
+// POST /login
+// Process login
+func LogIn(c *gin.Context) {
+	if isAleadyLogIn() {
+		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
+		c.Redirect(http.StatusSeeOther, "/")
+	}
+
+	// 세션 생성 후 유저 대시보드로 리다이렉트
 }
 
 func LogOut(c *gin.Context) {
+	// 세션 삭제 후 로그인 페이지로 리다이렉트
 
 }

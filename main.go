@@ -12,8 +12,13 @@ func main() {
 	models.ConnectDB()
 
 	r.LoadHTMLGlob("web/templates/*")
+	r.Static("/web/static", "./web/static")
 
-	r.GET("/", controller.IndexPage)
+	r.GET("/", controller.LogInPage)
+	r.GET("/signup", controller.SignUpPage)
+	r.POST("/login", controller.LogIn)
+	r.GET("/logout", controller.LogOut)
+
 	r.GET("/lists", controller.AllLists)
 	r.POST("/lists", controller.CreateList)
 	r.GET("/lists/:user", controller.FindListByUserName)
