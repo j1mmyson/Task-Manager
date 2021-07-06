@@ -6,8 +6,9 @@ import (
 
 type List struct {
 	ID      uint   `json:"id" gorm:"primary_key"`
-	User    string `json:"user"`
+	UserID  string `json:"user_id" gorm:"size:191"`
 	Title   string `json:"title"`
 	State   string `json:"state"`
 	Content string `json:"content"`
+	User    User   `gorm:"foreignKey:UserID"`
 }
