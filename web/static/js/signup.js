@@ -28,6 +28,19 @@ function checkBtnEnable(event){
             }
             break;
         case 'pw':
+            if(event.target.value.replace(regex, "") == ""){
+                event.target.style.backgroundColor = "red";
+            }
+            else{
+                event.target.style.backgroundColor = "green";
+            }
+            if((idText.style.backgroundColor == "green") && (nameText.style.backgroundColor == "green") && (checkText.style.backgroundColor == "green")){
+                submitBtn.disabled = false;
+            }
+            else{
+                submitBtn.disabled = true;
+            }
+            break;
         case 'check':
             if(checkText.value != pwText.value){
                 checkText.style.backgroundColor = "red";
