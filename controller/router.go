@@ -4,7 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/j1mmyson/reviewList/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type CreateListInput struct {
@@ -79,31 +81,103 @@ func DeleteListById(c *gin.Context) {
 // GET /
 // Login Page
 func LogInPage(c *gin.Context) {
-	if isAleadyLogIn() {
+	if IsAleadyLogIn(c) {
 		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
-		c.Redirect(http.StatusSeeOther, "/")
+		c.Redirect(http.StatusSeeOther, "/dashboard")
+		return
 	}
 	c.HTML(http.StatusOK, "login.html", nil)
-}
-
-// GET /signup
-// SignUp Page
-func SignUpPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "signup.html", nil)
 }
 
 // POST /login
 // Process login
 func LogIn(c *gin.Context) {
-	if isAleadyLogIn() {
+	if IsAleadyLogIn(c) {
 		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
 		c.Redirect(http.StatusSeeOther, "/")
+		return
 	}
+	var u *models.User
+	u, err := ReadUser(c)
+
+	if err != nil {
+		c.HTML(http.StatusOK, "login.html", gin.H{"error": err.Error()})
+		return
+	}
+	// 쿠키 생성
+	sID := uuid.New()
+	c.SetCookie("session", sID.String(), 1800, "", "", false, true)
+
+	// 세션 생성
+	models.CreateSession(sID.String(), u.ID)
+
+	// 대시보드 렌더링
+	c.Redirect(http.StatusSeeOther, "/dashboard")
 
 	// 세션 생성 후 유저 대시보드로 리다이렉트
 }
 
+// GET /signup
+// SignUp Page
+func SignUpPage(c *gin.Context) {
+
+	if IsAleadyLogIn(c) {
+		c.Redirect(http.StatusSeeOther, "/dashboard")
+		return
+	}
+	c.HTML(http.StatusOK, "signup.html", nil)
+}
+
+// POST /signup
+// process signup
+func SignUp(c *gin.Context) {
+	var u models.User
+	var err error
+	u.ID = c.PostForm("id")
+	bs, err := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.MinCost)
+	u.Password = string(bs[:])
+	u.Name = c.PostForm("name")
+
+	if err != nil {
+
+	}
+
+	models.DB.Create(&u)
+	c.Redirect(http.StatusSeeOther, "/")
+
+}
+
+func DashBoardPage(c *gin.Context) {
+	// 쿠키에서 세션 밸류값 즉 session_id 값을 받아온다.
+	sessionValue, err := c.Cookie("session")
+	if err != nil {
+		// 세션쿠키가 없다면 로그인페이지로 리다이렉트
+		c.Redirect(http.StatusSeeOther, "/")
+		return
+	}
+	// 받아온 session_id값으로 데이터베이스의 session 테이블의 user_id값을 가져온다.
+	uid, err := models.GetUserIdFromSession(sessionValue)
+	if err != nil {
+		// 세션이 없다면 로그인 페이지로 리다이렉트
+		c.Redirect(http.StatusSeeOther, "/")
+		return
+	}
+	u := models.GetUserFromUserId(uid)
+
+	c.HTML(http.StatusOK, "dashboard.html", u)
+}
+
 func LogOut(c *gin.Context) {
-	// 세션 삭제 후 로그인 페이지로 리다이렉트
+
+	if !IsAleadyLogIn(c) {
+		c.Redirect(http.StatusSeeOther, "/")
+		return
+	}
+	sid, _ := c.Cookie("session")
+	models.DeleteSession(sid)
+
+	c.SetCookie("session", sid, -1, "", "", false, true)
+
+	c.Redirect(http.StatusSeeOther, "/")
 
 }

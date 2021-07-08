@@ -15,9 +15,11 @@ func main() {
 	r.Static("/web/static", "./web/static")
 
 	r.GET("/", controller.LogInPage)
+	r.POST("/", controller.LogIn)
 	r.GET("/signup", controller.SignUpPage)
-	r.POST("/login", controller.LogIn)
+	r.POST("/signup", controller.SignUp)
 	r.GET("/logout", controller.LogOut)
+	r.GET("/dashboard", controller.DashBoardPage)
 
 	r.GET("/lists", controller.AllLists)
 	r.POST("/lists", controller.CreateList)
