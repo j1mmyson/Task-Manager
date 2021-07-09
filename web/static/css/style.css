@@ -6,24 +6,49 @@ h2{
 a{
     text-decoration: none;
 }
-a:link{color:orange;}
-a:visited{color: orange;}
+a:link{color:696464;}
+a:visited{color: 696464;}
 
+ul{
+    margin-left: 2em;
+}
+
+li {
+    text-align: left;
+}
 body{
     /* font-family: Arial, sans-serif;
-     */
+    */
     font-family: Consolas, sans-serif;;
     /* background-color:rgb(28, 33, 39); */
     /* color: rgb(224, 231, 238); */
-    background-color: beige;
-    color: orange;
+    background-color: FAF6E9;
+    color: 494949;
 }
 
 .input{
     text-align: center;
 }
 
+.container{
+    display: flex;
+}
+
+.box{
+
+    border-radius: 1.5em;
+    margin: 1em;
+    flex: 1;
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 10em;
+    padding-left: 10%;
+    padding-right: 10%;
+    background-color: ECE8D9;
+}
+
 .logo{
+
     font-style:inherit;
     text-align: center;
     width: 40%;
@@ -31,7 +56,8 @@ body{
     padding-left: 30%;
     padding-right: 30%;
     opacity: 100%;
-    color: orange;
+    color: 696464;
+    
     /* color:ivory; */
     display: inline-block;
     margin-block-end: 0em;
@@ -46,7 +72,7 @@ body{
     padding-right: 5%;
     opacity: 100%;
     /* color:ivory; */
-    color: orange;
+    color: 696464;
     float: left;
     /* display: block; */
     margin-block-end: 0em;
@@ -61,7 +87,7 @@ body{
     padding-right: 5%;
     opacity: 100%;
     /* color:ivory; */
-    color: orange;
+    color: 696464;
     float: left;
     /* display:block; */
     margin-block-end: 0em;
