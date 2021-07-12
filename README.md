@@ -17,6 +17,10 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
 
 ```
 
+## Will be like..
+
+![](https://github.com/j1mmyson/ToDoCalendar/blob/main/src/image/prototype.PNG?raw=true)
+
 ## Requirements
 
 - Golang >= 1.16.2
@@ -46,3 +50,4 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
    `$./excuteServer`
 
 6. Open browser and enter http://localhost:8080/
+
