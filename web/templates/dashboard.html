@@ -14,24 +14,40 @@
             <h4><a href="/logout">로그아웃</a></h4>
         </div>
     </div>
-    <div class="logo">DashBoard</div>
+    <div class="logo">Daily Task</div>
 
     <div class="container">
         <h2 style="flex: 3; text-align: end;">◁</h2>
-        <h2 style="flex: 1; text-align: center;">2021-07-09</h2>
+        <h2 style="flex: 1; text-align: center;">2021-07-12</h2>
         <h2 style="flex: 3; text-align: start;">▷</h2>
     </div>
     <div class="container">
-        <h1 style="flex: 1; padding-left: 2em;">Done</h1>
-        <h1 style="flex: 1; padding-left: 2em;">Doing</h1>
-        <h1 style="flex: 1; padding-left: 2em;">Todo</h1>
+        <h1 style="flex: 1; padding-left: 1em;">Done</h1>
+        <h1 style="flex: 1; padding-left: 1em;">In progress</h1>
+        <h1 style="flex: 1; padding-left: 1em;">Todo</h1>
     </div>
     <div class="container">
-        <div class="box">    
+        <div class="box">  
+            {{template "card"}}
+            {{template "card"}}
+            {{template "card"}} 
+            <div class="footer">
+                + add card
+            </div>
         </div>
         <div class="box">
+            {{template "card"}}
+            <div class="footer">
+                + add card
+            </div>
         </div>
         <div class="box">
+            {{template "card"}}
+            {{template "card"}}
+
+            <div class="footer">
+                + add card
+            </div>
         </div>
     </div>
 
