@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -10,6 +11,8 @@ import (
 )
 
 var DB *gorm.DB
+
+var DbSessionCleaned time.Time
 
 func ConnectDB() {
 	err := godotenv.Load(".env")
@@ -21,6 +24,8 @@ func ConnectDB() {
 	}
 
 	db.AutoMigrate(&List{}, &User{}, &Session{})
+
+	DbSessionCleaned = time.Now()
 
 	DB = db
 }

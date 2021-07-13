@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -17,6 +18,8 @@ type CreateListInput struct {
 	Content string      `json:"content"`
 	User    models.User `gorm:"foreignKey:UserID"`
 }
+
+const CookieDuration int = 1800
 
 // GET /lists
 // Get all lists
@@ -81,6 +84,11 @@ func DeleteListById(c *gin.Context) {
 // GET /
 // Login Page
 func LogInPage(c *gin.Context) {
+
+	if time.Now().Sub(models.DbSessionCleaned) > (time.Second * 30) {
+		go models.CleanSessions()
+	}
+
 	if IsAleadyLogIn(c) {
 		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
 		c.Redirect(http.StatusSeeOther, "/dashboard")
@@ -92,6 +100,11 @@ func LogInPage(c *gin.Context) {
 // POST /login
 // Process login
 func LogIn(c *gin.Context) {
+
+	if time.Now().Sub(models.DbSessionCleaned) > (time.Second * 30) {
+		go models.CleanSessions()
+	}
+
 	if IsAleadyLogIn(c) {
 		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
 		c.Redirect(http.StatusSeeOther, "/")
@@ -106,7 +119,7 @@ func LogIn(c *gin.Context) {
 	}
 	// 쿠키 생성
 	sID := uuid.New()
-	c.SetCookie("session", sID.String(), 1800, "", "", false, true)
+	c.SetCookie("session", sID.String(), CookieDuration, "", "", false, true)
 
 	// 세션 생성
 	models.CreateSession(sID.String(), u.ID)
@@ -142,12 +155,22 @@ func SignUp(c *gin.Context) {
 
 	}
 
-	models.DB.Create(&u)
+	if err := models.DB.Create(&u).Error; err != nil {
+		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
+			"error":    "id already exists.",
+			"id":       u.ID,
+			"name":     u.Name,
+			"password": c.PostForm("password"),
+		})
+	}
 	c.Redirect(http.StatusSeeOther, "/")
 
 }
 
 func DashBoardPage(c *gin.Context) {
+	if !IsAleadyLogIn(c) {
+		c.Redirect(http.StatusSeeOther, "/")
+	}
 	// 쿠키에서 세션 밸류값 즉 session_id 값을 받아온다.
 	sessionValue, err := c.Cookie("session")
 	if err != nil {
@@ -177,6 +200,10 @@ func LogOut(c *gin.Context) {
 	models.DeleteSession(sid)
 
 	c.SetCookie("session", sid, -1, "", "", false, true)
+
+	if time.Now().Sub(models.DbSessionCleaned) > (time.Minute * 5) {
+		go models.CleanSessions()
+	}
 
 	c.Redirect(http.StatusSeeOther, "/")
 

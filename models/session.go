@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 
 type Session struct {
 	SessionID string `gorm:"primary_key"`
-	UserID    string `gorm:"size:191"`
+	UserID    string `gorm:"size:191;unique"`
 	UpdatedAt time.Time
 	User      User `gorm:"foreignKey:UserID"`
 }
@@ -52,5 +53,20 @@ func UpdateCurrentTime(s Session) {
 func DeleteSession(sid string) {
 	var s Session
 	s.SessionID = sid
+	fmt.Printf("delete session : %s ! \n", sid)
 	DB.Delete(&s)
+}
+
+func CleanSessions() {
+
+	var sessions []Session
+
+	DB.Find(&sessions)
+	for _, s := range sessions {
+		if time.Now().Sub(s.UpdatedAt) > (time.Minute * 30) {
+			DeleteSession(s.SessionID)
+		}
+	}
+
+	DbSessionCleaned = time.Now()
 }

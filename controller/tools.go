@@ -16,9 +16,10 @@ func IsAleadyLogIn(c *gin.Context) bool {
 	uid, err := models.GetUserIdFromSession(sid)
 	if err != nil {
 		// 쿠키는 있는데 세션이 없으면 쿠키 삭제
+		c.SetCookie("session", sid, -1, "", "", false, true)
 		return false
 	}
-	c.SetCookie("session", sid, 1800, "", "", false, true)
+	c.SetCookie("session", sid, CookieDuration, "", "", false, true)
 	models.UpdateCurrentTime(*models.GetSessionFromUserId(uid))
 	return true
 }
