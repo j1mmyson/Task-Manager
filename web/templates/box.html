@@ -1,0 +1,19 @@
+{{define "box"}}
+
+<div class="box">  
+    {{ range .}}
+        <div class="card">
+            <div class="title">
+                {{.Title}}
+            </div>
+            <div class="content">
+                <p>{{.Content}}</p>
+            </div>
+        </div>
+    {{end}}
+    <div class="footer">
+        + add card
+    </div>
+</div>
+
+{{end}}
