@@ -185,9 +185,11 @@ func DashBoardPage(c *gin.Context) {
 		c.Redirect(http.StatusSeeOther, "/")
 		return
 	}
-	u := models.GetUserFromUserId(uid)
+	// u := models.GetUserFromUserId(uid)
+	data := models.MakeStructFromCards(models.GetCards(uid, models.GetDate(time.Now())))
 
-	c.HTML(http.StatusOK, "dashboard.html", u)
+	// c.HTML(http.StatusOK, "dashboard.html", u)
+	c.HTML(http.StatusOK, "test.html", data)
 }
 
 func LogOut(c *gin.Context) {
