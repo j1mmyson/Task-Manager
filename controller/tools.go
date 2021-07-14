@@ -11,6 +11,7 @@ import (
 func IsAleadyLogIn(c *gin.Context) bool {
 	sid, err := c.Cookie("session")
 	if err != nil {
+		go models.CleanSessions()
 		return false
 	}
 	uid, err := models.GetUserIdFromSession(sid)
