@@ -12,7 +12,7 @@
         </div>
     {{end}}
     
-    <form action="/lists" method="post">
+    <form action="/lists" method="post" id="todo_form" class="invisible">
         <div class="card">
             <div class="title">
                 <input type="text" name="title" id="">
@@ -20,7 +20,7 @@
             <div class="content">
                 <textarea name="content" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
             </div>
-                <input type="hidden" name="id" value="{{.UserID}}">
+                <input type="hidden" name="user_id" value="{{.UserID}}">
                 <input type="hidden" name="state" value="ToDo">
                 <input type="hidden" name="date" value="{{.Date}}">
                 <input type="submit" class="submit" value="확인">
