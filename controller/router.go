@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -11,12 +13,12 @@ import (
 )
 
 type CreateListInput struct {
-	ID      uint        `json:"id" gorm:"primary_key"`
-	UserID  string      `json:"user_id" gorm:"size:191"`
-	Title   string      `json:"title"`
-	State   string      `json:"state"`
-	Content string      `json:"content"`
-	User    models.User `gorm:"foreignKey:UserID"`
+	// ID      uint        `json:"id" gorm:"primary_key"`
+	UserID  string `form: "user_id" json:"user_id"`
+	Title   string `form: "title" json:"title"`
+	State   string `form: "state" json:"state"`
+	Content string `form: "content" json:"content"`
+	Date    int    `form: "date" json:"date"`
 }
 
 const CookieDuration int = 1800
@@ -35,9 +37,31 @@ func AllLists(c *gin.Context) {
 // Create List
 func CreateList(c *gin.Context) {
 	var input CreateListInput
+	fmt.Println(c.ContentType())
+	fmt.Println(c.Request.FormValue("user_id"))
 
 	switch c.ContentType() {
+	case "application/x-www-form-urlencoded":
+		fmt.Println("form data!")
+		input.UserID = c.Request.PostFormValue("user_id")
+		input.Title = c.Request.PostFormValue("title")
+		input.Content = c.Request.PostFormValue("content")
+		input.State = c.Request.PostFormValue("state")
+		date, _ := strconv.Atoi(c.Request.PostFormValue("date"))
+		input.Date = date
+
+		if input.Title == "" || input.Content == "" {
+			c.Redirect(http.StatusSeeOther, "/dashboard")
+			return
+		}
+
+		// if err := c.ShouldBind(&input); err != nil {
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// 	return
+		// }
+
 	case "multipart/form-data":
+		fmt.Println("form!")
 		if err := c.ShouldBind(&input); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
@@ -49,11 +73,14 @@ func CreateList(c *gin.Context) {
 		}
 	}
 
+	fmt.Println(input)
+
 	// Create list
-	list := models.List{UserID: input.UserID, Title: input.Title, State: input.State, Content: input.Content}
+	list := models.List{UserID: input.UserID, Title: input.Title, State: input.State, Date: input.Date, Content: input.Content}
 	models.DB.Create(&list)
 
-	c.JSON(http.StatusOK, gin.H{"data": list})
+	// c.JSON(http.StatusOK, gin.H{"data": list})
+	c.Redirect(http.StatusSeeOther, "/dashboard")
 }
 
 // GET /lists/:user
@@ -186,7 +213,7 @@ func DashBoardPage(c *gin.Context) {
 		return
 	}
 	// u := models.GetUserFromUserId(uid)
-	data := models.MakeStructFromCards(models.GetCards(uid, models.GetDate(time.Now())))
+	data := models.GetCards(uid, models.GetDate(time.Now()))
 
 	// c.HTML(http.StatusOK, "dashboard.html", u)
 	c.HTML(http.StatusOK, "test.html", data)

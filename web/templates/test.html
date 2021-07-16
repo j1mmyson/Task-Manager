@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,12 +6,14 @@
     <link rel="stylesheet" href="web/static/css/style.css">
 </head>
 <body>
+    {{$date := .Date}}
+    {{$uid := .UserID}}
     <div>
         <div class="small-logo">
             <h2><a href="/">Todo Calendar</a></h2>
         </div>
         <div class="user_profile">
-            <h3> {{.UserID}} 님</h3>
+            <h3> {{$uid}} 님</h3>
             <h4><a href="/logout">로그아웃</a></h4>
         </div>
     </div>
@@ -18,7 +21,7 @@
 
     <div class="container">
         <h2 style="flex: 3; text-align: end;">◁</h2>
-        <h2 style="flex: 1; text-align: center;">{{.Date}}</h2>
+        <h2 style="flex: 1; text-align: center;">{{$date}}</h2>
         <h2 style="flex: 3; text-align: start;">▷</h2>
     </div>
     <div class="container">
@@ -27,14 +30,16 @@
         <h1 style="flex: 1; padding-left: 1em;">Todo</h1>
     </div>
     <div class="container">
-        {{ template "box" .Done}}
-        {{ template "box" .InProgress}}
-        {{ template "box" .ToDo}}
-        
+        {{ template "doneBox" .Done }}
+        {{ template "inProgressBox" .InProgress}}
+        {{ template "toDoBox" .ToDo}}
     </div>
 
     <div class="center">
-    <p> -UserID : {{.UserID}}</p>
+    <p> - UserID : {{.UserID}}</p>
+    <p> - Date : {{.Date}} </p>
     </div>
+    <script src="/web/static/js/autoresize.js"></script>
+    <script src="/web/static/js/postCard.js"></script>
 </body>
 </html>

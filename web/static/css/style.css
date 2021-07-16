@@ -79,10 +79,27 @@ body{
     background-color:C2B8A3;
 }
 
+.title input{
+    border: none;
+    background: transparent;
+    line-height: 25px;
+}
+
+.content textarea{
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    height: auto;
+    overflow: hidden;
+}
+
+
 .card .content{
     padding-left: 3%;
     min-height: 3em;
     font-size: 1em;
+    min-height: 5em;
 }
 
 .footer{
@@ -146,4 +163,10 @@ body{
 .fail {
     /* opacity: 0%; */
     color: deeppink;
+}
+
+.submit{
+    
+    margin-left: 80%;
+    margin-bottom: 1em;
 }

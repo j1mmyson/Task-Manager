@@ -1,0 +1,36 @@
+{{define "toDoBox"}}
+
+<div class="box">  
+    {{ range .List}}
+        <div class="card">
+            <div class="title">
+                {{.Title}}
+            </div>
+            <div class="content">
+                <p>{{.Content}}</p>
+            </div>
+        </div>
+    {{end}}
+    
+    <form action="/lists" method="post">
+        <div class="card">
+            <div class="title">
+                <input type="text" name="title" id="">
+            </div>
+            <div class="content">
+                <textarea name="content" onkeydown="resize(this)" onkeyup="resize(this)"></textarea>
+            </div>
+                <input type="hidden" name="id" value="{{.UserID}}">
+                <input type="hidden" name="state" value="ToDo">
+                <input type="hidden" name="date" value="{{.Date}}">
+                <input type="submit" class="submit" value="확인">
+        </div>
+    </form>
+    
+    <div class="footer" id="toDoAddCard">
+        + add card
+    </div>
+
+</div>
+
+{{end}}
