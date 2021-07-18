@@ -1,12 +1,24 @@
 {{define "card"}}
 
 <div class="card">
-    <div class="title">
-        title
-    </div>
-    <div class="content">
-        <p>content</p>
-    </div>
+    <form action="/edit/{{.ID}}" method="POST">
+        <div class="title">
+            <input type="text" name="title" class="titleInput" value="{{.Title}}" readonly>
+        </div>
+        <div class="content">
+            <textarea name="content" class="contentInput" onkeydown="resize(this)" onkeyup="resize(this)" readonly>{{.Content}}</textarea>
+        </div>
+        <div class="box1 btnBox invisible">
+            <button type="submit" class="submitButton"></button>
+            <button type = "reset" onclick="clickEditButton(this)" class="cancelButton"></button>
+        </div>
+    </form>
+    <form action="/delete/{{.ID}}" method="POST">
+        <div class="box2 btnBox">
+            <button type = "button" id="editButton" class="editButton" onclick="clickEditButton(this)"></button> 
+            <button type = "submit" id="deleteButton" class="deleteButton"></button>
+        </div>
+    </form>
 </div>
 
 {{end}}

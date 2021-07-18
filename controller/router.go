@@ -95,7 +95,7 @@ func FindListByUserName(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": lists})
 }
 
-// POST /lists/delete/:id
+// POST /delete/:id
 func DeleteListById(c *gin.Context) {
 	var list models.List
 
@@ -105,7 +105,23 @@ func DeleteListById(c *gin.Context) {
 	}
 
 	models.DB.Delete(&list)
-	c.JSON(http.StatusOK, gin.H{"data": true})
+	// c.JSON(http.StatusOK, gin.H{"data": true})
+	c.Redirect(http.StatusSeeOther, "/dashboard")
+}
+
+// POST /edit/:id
+func EditListById(c *gin.Context) {
+	var list models.List
+
+	if err := models.DB.First(&list, c.Param("id")).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record Not Found!"})
+		return
+	}
+	list.Title = c.PostForm("title")
+	list.Content = c.PostForm("content")
+	models.DB.Save(&list)
+
+	c.Redirect(http.StatusSeeOther, "/dashboard")
 }
 
 // GET /

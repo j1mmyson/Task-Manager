@@ -2,14 +2,7 @@
 
 <div class="box">  
     {{ range .List}}
-        <div class="card">
-            <div class="title">
-                {{.Title}}
-            </div>
-            <div class="content">
-                <p>{{.Content}}</p>
-            </div>
-        </div>
+        {{template "card" .}}
     {{end}}
     
     <form action="/lists" method="post" id="todo_form" class="invisible">
@@ -23,11 +16,11 @@
                 <input type="hidden" name="user_id" value="{{.UserID}}">
                 <input type="hidden" name="state" value="ToDo">
                 <input type="hidden" name="date" value="{{.Date}}">
-                <input type="submit" class="submit" value="확인">
+                <input type="submit" class="submit" value="">
         </div>
     </form>
     
-    <div class="footer" id="toDoAddCard">
+    <div class="footer addCard" id="toDoAddCard" class="addCard">
         + add card
     </div>
 

@@ -27,6 +27,10 @@ body{
     color: 494949;
 }
 
+textarea{
+    height: min-content;
+}
+
 .input{
     text-align: center;
 }
@@ -47,6 +51,7 @@ body{
     padding-bottom: 2em;
     background-color: ECE8D9;
     position: relative;
+    height: fit-content;
 }
 
 .card{
@@ -81,25 +86,52 @@ body{
 
 .title input{
     border: none;
+    
     background: transparent;
-    line-height: 25px;
+    font-size: 1em;
+    font-weight: bold;    
+    font-family: Consolas, sans-serif;
+    color: 494949;
+
+    /* line-height: 25px; */
+}
+
+.title input:focus{
+    outline: none ;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
 .content textarea{
+    border: brown;
     border: none;
     background: transparent;
     outline: none;
     resize: none;
     height: auto;
     overflow: hidden;
+    min-height: 3em;
+
+
+    font-size: 1em;
+
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;    
+    font-family: Consolas, sans-serif;
+
 }
 
 
 .card .content{
     padding-left: 3%;
     min-height: 3em;
-    font-size: 1em;
-    min-height: 5em;
+    font-size: 1em; 
+}
+
+.invisible{
+    display: none;
 }
 
 .footer{
@@ -167,6 +199,40 @@ body{
 
 .submit{
     
-    margin-left: 80%;
+    margin-left: 85%;
     margin-bottom: 1em;
+    background-color: 81B214;
+}
+
+.deleteButton, .editButton, .submitButton, .cancelButton{
+    width: 1.5em;
+    height: 1.5em;
+    border-radius: 50%;
+    border: none;
+    cursor:pointer;
+}
+
+.deleteButton, .cancelButton{
+    background-color: CE1212;
+}
+
+.editButton{
+    background-color: 005A8D;
+}
+
+.submitButton{
+    background-color: 81B214;
+}
+
+.btnBox{
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+    
+    /* margin-right: 0.5em; */
+    /* margin-bottom: 1em; */
+    text-align: end;
+}
+
+.addCard{
+    cursor: pointer;
 }

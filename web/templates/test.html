@@ -30,7 +30,8 @@
         <h1 style="flex: 1; padding-left: 1em;">Todo</h1>
     </div>
     <div class="container">
-        {{ template "doneBox" .Done }}
+        
+        {{template "testBox" .Done}}
         {{ template "inProgressBox" .InProgress}}
         {{ template "toDoBox" .ToDo}}
     </div>
@@ -41,5 +42,6 @@
     </div>
     <script src="/web/static/js/autoresize.js"></script>
     <script src="/web/static/js/handleForm.js"></script>
+    <script src="web/static/js/edditButton.js"></script>
 </body>
 </html>

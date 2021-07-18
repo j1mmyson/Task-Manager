@@ -12,7 +12,7 @@ type List struct {
 	UserID  string `json:"user_id" gorm:"size:191"`
 	Title   string `json:"title" gorm:"not null"`
 	State   string `json:"state"`
-	Content string `json:"content" `
+	Content string `json:"content"`
 	Date    int    `json:"date"`
 	User    User   `gorm:"foreignKey:UserID"`
 }
