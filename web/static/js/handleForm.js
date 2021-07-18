@@ -9,10 +9,8 @@ todoAdd = document.getElementById("toDoAddCard");
 
 
 function handleForm(event) {
-    console.log("handleForm()!")
     switch (event.target.id){
         case "doneAddCard":
-            console.log("doneform!")
             doneForm.classList.toggle('invisible');
             event.target.classList.toggle('invisible');
             break
