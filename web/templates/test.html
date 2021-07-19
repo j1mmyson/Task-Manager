@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{{.UserID}}'s DashBoard</title>
-    <link rel="stylesheet" href="web/static/css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
     {{$date := .Date}}
     {{$uid := .UserID}}
     <div>
         <div class="small-logo">
-            <h2><a href="/">Todo Calendar</a></h2>
+            <h2><a href="/">my Little<br>task manager</a></h2>
         </div>
         <div class="user_profile">
             <h3> {{$uid}} 님</h3>
@@ -36,12 +36,8 @@
         {{ template "toDoBox" .ToDo}}
     </div>
 
-    <div class="center">
-    <p> - UserID : {{.UserID}}</p>
-    <p> - Date : {{.Date}} </p>
-    </div>
-    <script src="/web/static/js/autoresize.js"></script>
-    <script src="/web/static/js/handleForm.js"></script>
-    <script src="web/static/js/edditButton.js"></script>
+    <script src="static/js/autoresize.js"></script>
+    <script src="static/js/handleForm.js"></script>
+    <script src="static/js/edditButton.js"></script>
 </body>
 </html>

@@ -109,7 +109,7 @@ textarea{
     background: transparent;
     outline: none;
     resize: none;
-    height: auto;
+    height: 100%;
     overflow: hidden;
     min-height: 3em;
 
@@ -128,6 +128,7 @@ textarea{
     padding-left: 3%;
     min-height: 3em;
     font-size: 1em; 
+    height: auto;
 }
 
 .invisible{

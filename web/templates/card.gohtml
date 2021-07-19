@@ -1,6 +1,6 @@
 {{define "card"}}
 
-<div class="card">
+<div class="card" onmouseover="upsize(this)" onmouseout="downsize(this)">
     <form action="/edit/{{.ID}}" method="POST">
         <div class="title">
             <input type="text" name="title" class="titleInput" value="{{.Title}}" readonly>
