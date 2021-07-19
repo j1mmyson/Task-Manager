@@ -1,12 +1,14 @@
-// const content = document.querySelector(".content");
-
-
-
 function resize(obj) {
-    // console.log("resize()!")
-    obj.style.height = "auto";
     obj.style.height = obj.scrollHeight;
 }
 
-// content.addEventListener("keydown", resize);
-// content.addEventListener("keyup", resize);
+
+function upsize(obj) {
+    textarea = obj.querySelector('.contentInput');
+    textarea.style.height = textarea.scrollHeight;
+}
+
+function downsize(obj) {
+    textarea = obj.querySelector('.contentInput');
+    textarea.style.height = "auto";
+}
