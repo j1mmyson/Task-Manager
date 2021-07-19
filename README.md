@@ -17,22 +17,21 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
 
 ```
 
-## Will be like..
-
-![](https://github.com/j1mmyson/ToDoCalendar/blob/main/src/image/prototype.PNG?raw=true)
+## Demo
+<http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
 
 ## Requirements
 
 - Golang >= 1.16.2
 - mysql
 
-## Usage
+## Run in local
 
 1. Clone this repository
-   `$git clone https://github.com/j1mmyson/todo_calendar.git`
+   `$ git clone https://github.com/j1mmyson/todo_calendar.git`
 
 2. Enter cloned repository
-   `$cd todo_calendar`
+   `$ cd todo_calendar`
 
 3. Create `.env`file at root folder(where `main.go` exists)
 
@@ -44,10 +43,12 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
    ```
 
 4. Build binary file
-   `$go build -o excuteServer`
+   `$ go build -o executeServer`
 
 5. Run binary file
-   `$./excuteServer`
+   `$ ./executeServer`
 
 6. Open browser and enter http://localhost:8080/
 
+## Future Feature
+...
