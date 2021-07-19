@@ -1,11 +1,4 @@
 
-// titleInput = document.getElementById("titleInput");
-// contentInput = document.getElementById("contentInput");
-
-// box1 = document.getElementById("box1");
-// box2 = document.getElementById("box2");
-// editButton = document.getElementById("editButton");
-
 function clickEditButton(obj) {
     card = obj.parentNode.parentNode.parentNode;
     t = card.querySelector('.titleInput');
