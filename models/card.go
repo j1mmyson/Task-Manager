@@ -18,8 +18,7 @@ type List struct {
 }
 
 type CardData struct {
-	UserID string
-	// UserName   string
+	UserID     string
 	Date       string
 	Done       Box
 	InProgress Box
@@ -42,7 +41,7 @@ func GetCards(uid string, date int) CardData {
 	var cards []List
 	var cd CardData
 	DB.Where("user_id = ? AND date = ?", uid, date).Find(&cards)
-	// db.Where("name = ? AND age >= ?", "jinzhu", "22").Find(&users)
+
 	dateString := strconv.Itoa(date)
 	cd.UserID = uid
 	cd.Date = dateString

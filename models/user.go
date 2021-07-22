@@ -13,10 +13,9 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func GetUserFromUserId(uid string) *User {
+func GetUserFromUserId(uid string) User {
 	var u User
 
 	DB.First(&u, "id = ?", uid)
-
-	return &u
+	return u
 }

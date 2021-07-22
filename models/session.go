@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-	"log"
 	"time"
 
 	_ "gorm.io/gorm"
@@ -16,14 +14,10 @@ type Session struct {
 }
 
 func CreateSession(sid string, uid string) {
-	log.Println("CreateSession() !")
 	var s Session
-	s.SessionID = sid
-	s.UserID = uid
-	s.UpdatedAt = time.Now()
 
+	s.SessionID, s.UserID, s.UpdatedAt = sid, uid, time.Now()
 	DB.Create(&s)
-
 }
 
 func GetUserIdFromSession(sid string) (string, error) {
@@ -36,14 +30,14 @@ func GetUserIdFromSession(sid string) (string, error) {
 	return s.UserID, nil
 }
 
-func GetSessionFromUserId(uid string) *Session {
+func GetSessionFromUserId(uid string) Session {
 	var s Session
 
 	if err := DB.First(&s, "user_id = ?", uid).Error; err != nil {
-		return nil
+		return Session{}
 	}
 
-	return &s
+	return s
 }
 
 func UpdateCurrentTime(s Session) {
@@ -52,13 +46,12 @@ func UpdateCurrentTime(s Session) {
 
 func DeleteSession(sid string) {
 	var s Session
+
 	s.SessionID = sid
-	fmt.Printf("delete session : %s ! \n", sid)
 	DB.Delete(&s)
 }
 
 func CleanSessions() {
-
 	var sessions []Session
 
 	DB.Find(&sessions)

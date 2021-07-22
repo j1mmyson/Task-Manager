@@ -14,7 +14,6 @@ import (
 var (
 	//go:embed web/templates/*
 	templatesFS embed.FS
-
 	//go:embed web
 	staticFS embed.FS
 )
@@ -43,7 +42,7 @@ func main() {
 	r.POST("/delete/:id", controller.DeleteListById)
 	r.POST("/edit/:id", controller.EditListById)
 
-	r.Run("")
+	r.Run(":8080")
 }
 
 func LoadHTMLFromEmbedFS(r *gin.Engine, em embed.FS, pattern string) {

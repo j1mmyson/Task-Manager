@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -37,49 +36,22 @@ func AllLists(c *gin.Context) {
 // Create List
 func CreateList(c *gin.Context) {
 	var input CreateListInput
-	fmt.Println(c.ContentType())
-	fmt.Println(c.Request.FormValue("user_id"))
 
-	switch c.ContentType() {
-	case "application/x-www-form-urlencoded":
-		fmt.Println("form data!")
-		input.UserID = c.Request.PostFormValue("user_id")
-		input.Title = c.Request.PostFormValue("title")
-		input.Content = c.Request.PostFormValue("content")
-		input.State = c.Request.PostFormValue("state")
-		date, _ := strconv.Atoi(c.Request.PostFormValue("date"))
-		input.Date = date
+	input.UserID = c.Request.PostFormValue("user_id")
+	input.Title = c.Request.PostFormValue("title")
+	input.Content = c.Request.PostFormValue("content")
+	input.State = c.Request.PostFormValue("state")
+	date, _ := strconv.Atoi(c.Request.PostFormValue("date"))
+	input.Date = date
 
-		if input.Title == "" || input.Content == "" {
-			c.Redirect(http.StatusSeeOther, "/dashboard")
-			return
-		}
-
-		// if err := c.ShouldBind(&input); err != nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
-	case "multipart/form-data":
-		fmt.Println("form!")
-		if err := c.ShouldBind(&input); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-	case "application/json":
-		if err := c.ShouldBindJSON(&input); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error:": err.Error()})
-			return
-		}
+	if input.Title == "" || input.Content == "" {
+		c.Redirect(http.StatusSeeOther, "/dashboard")
+		return
 	}
 
-	fmt.Println(input)
-
-	// Create list
 	list := models.List{UserID: input.UserID, Title: input.Title, State: input.State, Date: input.Date, Content: input.Content}
 	models.DB.Create(&list)
 
-	// c.JSON(http.StatusOK, gin.H{"data": list})
 	c.Redirect(http.StatusSeeOther, "/dashboard")
 }
 
@@ -96,6 +68,7 @@ func FindListByUserName(c *gin.Context) {
 }
 
 // POST /delete/:id
+// Delete card by card id.
 func DeleteListById(c *gin.Context) {
 	var list models.List
 
@@ -105,11 +78,11 @@ func DeleteListById(c *gin.Context) {
 	}
 
 	models.DB.Delete(&list)
-	// c.JSON(http.StatusOK, gin.H{"data": true})
 	c.Redirect(http.StatusSeeOther, "/dashboard")
 }
 
 // POST /edit/:id
+// Edit card by card id.
 func EditListById(c *gin.Context) {
 	var list models.List
 
@@ -125,58 +98,50 @@ func EditListById(c *gin.Context) {
 }
 
 // GET /
-// Login Page
+// Rendering login page.
 func LogInPage(c *gin.Context) {
-
 	if time.Now().Sub(models.DbSessionCleaned) > (time.Second * 30) {
 		go models.CleanSessions()
 	}
 
 	if IsAleadyLogIn(c) {
-		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
 		c.Redirect(http.StatusSeeOther, "/dashboard")
 		return
 	}
+
 	c.HTML(http.StatusOK, "login.html", nil)
 }
 
-// POST /login
-// Process login
+// POST /
+// Check if it is a valid login and redirect user.
 func LogIn(c *gin.Context) {
-
 	if time.Now().Sub(models.DbSessionCleaned) > (time.Second * 30) {
 		go models.CleanSessions()
 	}
 
 	if IsAleadyLogIn(c) {
-		// 이미 로그인이 되어있다면 세션을 참조하여 해당 유저의 대시보드로 리다이렉트 해주자
 		c.Redirect(http.StatusSeeOther, "/")
 		return
 	}
-	var u *models.User
-	u, err := ReadUser(c)
 
-	if err != nil {
+	var u models.User
+	var err error
+
+	if u, err = ReadUser(c); err != nil {
 		c.HTML(http.StatusOK, "login.html", gin.H{"error": err.Error()})
 		return
 	}
-	// 쿠키 생성
+
 	sID := uuid.New()
 	c.SetCookie("session", sID.String(), CookieDuration, "", "", false, true)
-
-	// 세션 생성
 	models.CreateSession(sID.String(), u.ID)
 
-	// 대시보드 렌더링
 	c.Redirect(http.StatusSeeOther, "/dashboard")
-
-	// 세션 생성 후 유저 대시보드로 리다이렉트
 }
 
 // GET /signup
-// SignUp Page
+// Rendering signup page.
 func SignUpPage(c *gin.Context) {
-
 	if IsAleadyLogIn(c) {
 		c.Redirect(http.StatusSeeOther, "/dashboard")
 		return
@@ -185,62 +150,57 @@ func SignUpPage(c *gin.Context) {
 }
 
 // POST /signup
-// process signup
+// Create user account according to user input and check whether it is valid or not.
 func SignUp(c *gin.Context) {
 	var u models.User
 	var err error
 	u.ID = c.PostForm("id")
-	bs, err := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.MinCost)
+	bs, _ := bcrypt.GenerateFromPassword([]byte(c.PostForm("password")), bcrypt.MinCost)
 	u.Password = string(bs[:])
 	u.Name = c.PostForm("name")
 
-	if err != nil {
-
-	}
-
-	if err := models.DB.Create(&u).Error; err != nil {
+	if err = models.DB.Create(&u).Error; err != nil {
 		c.HTML(http.StatusBadRequest, "signup.html", gin.H{
 			"error":    "id already exists.",
 			"id":       u.ID,
 			"name":     u.Name,
 			"password": c.PostForm("password"),
 		})
+		return
 	}
 	c.Redirect(http.StatusSeeOther, "/")
-
 }
 
+// GET /dashboard
+// Rendering dashboard page according to session cookie.
 func DashBoardPage(c *gin.Context) {
 	if !IsAleadyLogIn(c) {
 		c.Redirect(http.StatusSeeOther, "/")
 	}
-	// 쿠키에서 세션 밸류값 즉 session_id 값을 받아온다.
+	var err error
+
 	sessionValue, err := c.Cookie("session")
 	if err != nil {
-		// 세션쿠키가 없다면 로그인페이지로 리다이렉트
 		c.Redirect(http.StatusSeeOther, "/")
 		return
 	}
-	// 받아온 session_id값으로 데이터베이스의 session 테이블의 user_id값을 가져온다.
+
 	uid, err := models.GetUserIdFromSession(sessionValue)
 	if err != nil {
-		// 세션이 없다면 로그인 페이지로 리다이렉트
 		c.Redirect(http.StatusSeeOther, "/")
 		return
 	}
-	// u := models.GetUserFromUserId(uid)
-	data := models.GetCards(uid, models.GetDate(time.Now()))
 
-	// c.HTML(http.StatusOK, "dashboard.html", u)
-	c.HTML(http.StatusOK, "test.html", data)
+	data := models.GetCards(uid, models.GetDate(time.Now()))
+	c.HTML(http.StatusOK, "dashboard.html", data)
 }
 
 func LogOut(c *gin.Context) {
-
 	if !IsAleadyLogIn(c) {
 		c.Redirect(http.StatusSeeOther, "/")
 		return
 	}
+
 	sid, _ := c.Cookie("session")
 	models.DeleteSession(sid)
 
@@ -251,5 +211,4 @@ func LogOut(c *gin.Context) {
 	}
 
 	c.Redirect(http.StatusSeeOther, "/")
-
 }

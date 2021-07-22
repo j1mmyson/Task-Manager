@@ -21,23 +21,23 @@ func IsAleadyLogIn(c *gin.Context) bool {
 		return false
 	}
 	c.SetCookie("session", sid, CookieDuration, "", "", false, true)
-	models.UpdateCurrentTime(*models.GetSessionFromUserId(uid))
+	models.UpdateCurrentTime(models.GetSessionFromUserId(uid))
 	return true
 }
 
-func ReadUser(c *gin.Context) (*models.User, error) {
+func ReadUser(c *gin.Context) (models.User, error) {
 	id, pw := c.PostForm("id"), c.PostForm("password")
 
 	var u models.User
 
 	if err := models.DB.First(&u, "id = ?", id).Error; err != nil {
-		return nil, errors.New("id doesn`t exists")
+		return models.User{}, errors.New("id doesn`t exists")
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(pw)); err != nil {
-		return nil, errors.New("wrong password T^T")
+		return models.User{}, errors.New("wrong password T^T")
 	}
 
-	return &u, nil
+	return u, nil
 
 }
