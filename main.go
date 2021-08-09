@@ -7,6 +7,7 @@ import (
 	"path"
 
 	"github.com/gin-gonic/gin"
+	"github.com/j1mmyson/reviewList/api"
 	"github.com/j1mmyson/reviewList/controller"
 	"github.com/j1mmyson/reviewList/models"
 )
@@ -41,6 +42,10 @@ func main() {
 	r.GET("/lists/:user", controller.FindListByUserName)
 	r.POST("/delete/:id", controller.DeleteListById)
 	r.POST("/edit/:id", controller.EditListById)
+
+	r.POST("/api/user", api.CreateUser)
+	r.GET("/api/user", api.ShowUserList)
+	r.DELETE("/api/user", api.DeleteUser)
 
 	r.Run(":8080")
 }
