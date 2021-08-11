@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,12 +9,13 @@ import (
 )
 
 // GET /api/user
-// Return user list form [id, name]
+// Return all users
 func ShowUserList(c *gin.Context) {
 	var users []models.User
 
 	if err := models.DB.Find(&users).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": users})
@@ -24,7 +24,15 @@ func ShowUserList(c *gin.Context) {
 // GET /api/user/:id
 // Return user information ex) id, pw, name, created time ..
 func GetUser(c *gin.Context) {
+	var u models.User
+	id := c.Param("id")
 
+	if err := models.DB.Where("id = ?", id).Find(&u).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, u)
 }
 
 // POST /api/user
@@ -37,7 +45,6 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// encrypting password
 	bs, _ := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.MinCost)
 	u.Password = string(bs[:])
 
@@ -51,14 +58,13 @@ func CreateUser(c *gin.Context) {
 // DELETE /api/user
 func DeleteUser(c *gin.Context) {
 	var input models.User
+	var u models.User
+	var list models.List
 
-	// 입력폼 받아옴.
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("input:", input)
-	var u models.User
 
 	if err := models.DB.First(&u, "id = ?", input.ID).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "id doesn`t exists"})
@@ -70,7 +76,6 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	var list models.List
 	if err := models.DB.Where("user_id = ?", u.ID).Delete(&list).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

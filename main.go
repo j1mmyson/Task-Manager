@@ -43,9 +43,18 @@ func main() {
 	r.POST("/delete/:id", controller.DeleteListById)
 	r.POST("/edit/:id", controller.EditListById)
 
-	r.POST("/api/user", api.CreateUser)
-	r.GET("/api/user", api.ShowUserList)
-	r.DELETE("/api/user", api.DeleteUser)
+	apiRouter := r.Group("/api")
+	{
+		apiRouter.POST("/user", api.CreateUser)
+		apiRouter.GET("/user", api.ShowUserList)
+		apiRouter.GET("/user/:id", api.GetUser)
+		apiRouter.DELETE("/user", api.DeleteUser)
+
+		apiRouter.GET("/:user_id/card", api.GetCards)
+		apiRouter.POST("/card", api.CreateCard)
+		apiRouter.DELETE("/card/:id", api.DeleteCard)
+		apiRouter.PUT("/card/:id", api.EditCard)
+	}
 
 	r.Run(":8080")
 }
