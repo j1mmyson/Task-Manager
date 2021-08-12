@@ -13,8 +13,11 @@
             <button type = "reset" onclick="clickEditButton(this)" class="cancelButton"></button>
         </div>
     </form>
-    <form action="/delete/{{.ID}}" method="POST">
-        <div class="box2 btnBox">
+    <form action="/delete/{{.ID}}" method="POST" style="display: flex">
+        <div style="flex:1; padding-left:1em; padding-bottom: 0.5em;" >
+            {{.Date}}
+        </div>
+        <div class="box2 btnBox" style="flex:1">
             <button type = "button" id="editButton" class="editButton" onclick="clickEditButton(this)"></button> 
             <button type = "submit" id="deleteButton" class="deleteButton"></button>
         </div>

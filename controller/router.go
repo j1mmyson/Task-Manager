@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +12,11 @@ import (
 
 type CreateListInput struct {
 	// ID      uint        `json:"id" gorm:"primary_key"`
-	UserID  string `form: "user_id" json:"user_id"`
-	Title   string `form: "title" json:"title"`
-	State   string `form: "state" json:"state"`
-	Content string `form: "content" json:"content"`
-	Date    int    `form: "date" json:"date"`
+	UserID  string    `form: "user_id" json:"user_id"`
+	Title   string    `form: "title" json:"title"`
+	State   string    `form: "state" json:"state"`
+	Content string    `form: "content" json:"content"`
+	Date    time.Time `form: "date" json:"date"`
 }
 
 const CookieDuration int = 1800
@@ -41,8 +40,7 @@ func CreateList(c *gin.Context) {
 	input.Title = c.Request.PostFormValue("title")
 	input.Content = c.Request.PostFormValue("content")
 	input.State = c.Request.PostFormValue("state")
-	date, _ := strconv.Atoi(c.Request.PostFormValue("date"))
-	input.Date = date
+	input.Date = time.Now()
 
 	if input.Title == "" || input.Content == "" {
 		c.Redirect(http.StatusSeeOther, "/dashboard")
@@ -191,7 +189,8 @@ func DashBoardPage(c *gin.Context) {
 		return
 	}
 
-	data := models.GetCards(uid, models.GetDate(time.Now()))
+	data := models.GetCards(uid)
+
 	c.HTML(http.StatusOK, "dashboard.html", data)
 }
 
