@@ -18,9 +18,10 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
 ```
 
 ## Demo
-try try!  
+#### try try!  
 `public id`: testid  
-`password`: qwe123
+`password`: qwe123  
+Also you can sign up and use it!  
 <http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
 
 ## Requirements
