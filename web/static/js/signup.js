@@ -56,7 +56,6 @@ function checkBtnEnable(event){
             }
             break;
         default:
-            console.log("default");
             break;
     }
 }
