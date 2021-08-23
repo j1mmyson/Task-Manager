@@ -18,6 +18,9 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
 ```
 
 ## Demo
+try try!  
+`public id`: testid  
+`password`: qwe123
 <http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
 
 ## Requirements
