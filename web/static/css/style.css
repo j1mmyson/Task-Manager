@@ -86,7 +86,7 @@ textarea{
 
 .title input{
     border: none;
-    
+    width: 14em;
     background: transparent;
     font-size: 1em;
     font-weight: bold;    
