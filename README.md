@@ -1,4 +1,4 @@
-# ToDoCalendar
+# Task-Manager
 
 `ToDoCalendar` is side project that helps you to manage your task on a daily basis in web browser.  
 maybe you can improve your task efficiency and trace what to do next.  
@@ -17,12 +17,19 @@ I inspired by my internship experiments. It helps me a lot to note lists every m
 
 ```
 
-## Demo
-#### try try!  
-`public id`: testid  
-`password`: qwe123  
-Also you can sign up and use it!  
-<http://ec2-3-17-39-222.us-east-2.compute.amazonaws.com/>
+## Preview
+
+### Login
+
+![](https://github.com/j1mmyson/j1mmyson.github.io/blob/main/assets/img/posts/devlog/2021-07-17/login.gif?raw=true)
+
+### Sign up
+
+![](https://github.com/j1mmyson/j1mmyson.github.io/blob/main/assets/img/posts/devlog/2021-07-17/signup.gif?raw=true)
+
+### Add
+
+![](https://github.com/j1mmyson/j1mmyson.github.io/blob/main/assets/img/posts/devlog/2021-07-17/add.gif?raw=true)
 
 ## Requirements
 
@@ -53,6 +60,3 @@ Also you can sign up and use it!
    `$ ./executeServer`
 
 6. Open browser and enter http://localhost:8080/
-
-## Future Feature
-...
